@@ -3,8 +3,6 @@
 page_title: "foxfunx Provider"
 description: |-
   foxfunx is a function-only provider.
-  foxfunx includes below functions:
-  `direxists` verified if directory exists. If path is a file, function returns an error.
 ---
 
 # foxfunx Provider
@@ -12,7 +10,8 @@ description: |-
 `foxfunx` is a function-only provider.
 
 `foxfunx` includes below functions:
-- `direxists` verified if directory exists. If path is a file, function returns an error.
+- `direxists` given a path, return boolean depending on directory existence. Fails for files.
+- `tocidr` given subnet and netmask, return subnet and netmask in the cidr format. Fails for invalid subnet or netmasks.
 
 ## Example Usage
 
