@@ -14,7 +14,7 @@ import (
 	"github.com/segmentio/ksuid"
 )
 
-func TestDirExistsEtc(t *testing.T) {
+func TestDirEmptyEtc(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
 			tfversion.SkipBelow(tfversion.Version1_8_0),
@@ -24,12 +24,12 @@ func TestDirExistsEtc(t *testing.T) {
 			{
 				Config: `
                 output "test" {
-                    value = provider::foxfunx::direxists("/etc")
+                    value = provider::foxfunx::dirempty("/etc")
                 }
                 `,
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
-						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(true)),
+						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(false)),
 					},
 				},
 			},
@@ -37,7 +37,7 @@ func TestDirExistsEtc(t *testing.T) {
 	})
 }
 
-func TestDirExistsEtcHostsFile(t *testing.T) {
+func TestDirEmptyEtcHostsFile(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
 			tfversion.SkipBelow(tfversion.Version1_8_0),
@@ -47,7 +47,7 @@ func TestDirExistsEtcHostsFile(t *testing.T) {
 			{
 				Config: `
                 output "test" {
-                    value = provider::foxfunx::direxists("/etc/hosts")
+                    value = provider::foxfunx::dirempty("/etc/hosts")
                 }
                 `,
 				ExpectError: regexp.MustCompile(`is not a directory`),
@@ -56,45 +56,7 @@ func TestDirExistsEtcHostsFile(t *testing.T) {
 	})
 }
 
-func TestDirExistsDummyDir(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
-			tfversion.SkipBelow(tfversion.Version1_8_0),
-		},
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			{
-				Config: `
-                output "test" {
-                    value = provider::foxfunx::direxists("~/dummy_dir")
-                }
-                `,
-				ExpectError: regexp.MustCompile(`path does not exist`),
-			},
-		},
-	})
-}
-
-func TestDirExistsEmptyValue(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
-			tfversion.SkipBelow(tfversion.Version1_8_0),
-		},
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			{
-				Config: `
-                output "test" {
-                    value = provider::foxfunx::direxists("")
-                }
-                `,
-				ExpectError: regexp.MustCompile(`path does not exist`),
-			},
-		},
-	})
-}
-
-func TestDirExistsRandomUuid(t *testing.T) {
+func TestDirEmptyRandomUuid(t *testing.T) {
 	id := ksuid.New()
 	resource.UnitTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{

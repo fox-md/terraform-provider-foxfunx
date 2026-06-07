@@ -38,9 +38,6 @@ plan:
 
 docs:
 	cd tools && go generate ./... && cd ..
-	cd docs && \
-	find . -type f -name "*.md" -exec sed -i 's/&#96;/`/g' {} + && \
-	cd ..
 
 .PHONY: fmt lint test testacc install generate apply plan docs
 

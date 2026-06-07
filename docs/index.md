@@ -3,14 +3,16 @@
 page_title: "foxfunx Provider"
 description: |-
   foxfunx is a function-only provider.
-  foxfunx includes below functions:- direxists given a path, return boolean depending on directory existence. Fails for files.- tocidr given subnet and netmask, return subnet and netmask in the cidr format. Fails for invalid subnet or netmasks.
 ---
 
 # foxfunx Provider
 
 `foxfunx` is a function-only provider.
 
-`foxfunx` includes below functions:- `direxists` given a path, return boolean depending on directory existence. Fails for files.- `tocidr` given subnet and netmask, return subnet and netmask in the cidr format. Fails for invalid subnet or netmasks.
+`foxfunx` includes below functions:
+- `direxists` given a path, return boolean depending on directory existence. Fails for files.
+- `dirempty` given a path, return boolean depending on directory content. Fails for files.
+- `tocidr` given subnet and netmask, return subnet and netmask in the cidr format. Fails for invalid subnet or netmasks.
 
 ## Example Usage
 
