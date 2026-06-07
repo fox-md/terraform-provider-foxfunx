@@ -17,7 +17,7 @@ func isDir(ctx context.Context, path string) (bool, error) {
 		return false, fmt.Errorf("'%s' path does not exist", path)
 	} else if err != nil {
 		tflog.Error(ctx, fmt.Sprintf("failed to verify path. Error: %s", err.Error()))
-		return false, fmt.Errorf("Failed to check '%s' path. Error: %s", path, err.Error())
+		return false, fmt.Errorf("failed to check '%s' path. Error: %s", path, err.Error())
 	} else if info.IsDir() {
 		return true, nil
 	} else {
