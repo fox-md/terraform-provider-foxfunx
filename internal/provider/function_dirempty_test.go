@@ -55,7 +55,7 @@ func TestDirEmptyRandomEmptyDir(t *testing.T) {
 				},
 				Config: `
                 output "test" {
-                    value = provider::foxfunx::direxists("` + path + `")
+                    value = provider::foxfunx::dirempty("` + path + `")
                 }
                 `,
 				ConfigPlanChecks: resource.ConfigPlanChecks{
@@ -98,11 +98,11 @@ func TestDirEmptyRandomUuid(t *testing.T) {
 			{
 				Config: `
                 output "test" {
-                    value = provider::foxfunx::direxists("~/` + id.String() + `")
+                    value = provider::foxfunx::dirempty("~/` + id.String() + `")
                 }
                 `,
-				ExpectError: regexp.MustCompile(`path does
-not exist`),
+				ExpectError: regexp.MustCompile(`no
+such file or directory`),
 			},
 		},
 	})

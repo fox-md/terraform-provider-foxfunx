@@ -14,7 +14,7 @@ import (
 func isDir(ctx context.Context, path string) (bool, error) {
 	info, err := os.Stat(path)
 	if os.IsNotExist(err) {
-		return false, fmt.Errorf("'%s' path does not exist", path)
+		return false, nil
 	} else if err != nil {
 		tflog.Error(ctx, fmt.Sprintf("failed to verify path. Error: %s", err.Error()))
 		return false, fmt.Errorf("failed to check '%s' path. Error: %s", path, err.Error())
