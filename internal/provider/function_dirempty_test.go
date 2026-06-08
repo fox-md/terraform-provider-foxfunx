@@ -4,6 +4,7 @@
 package provider
 
 import (
+	"os"
 	"regexp"
 	"testing"
 
@@ -30,6 +31,36 @@ func TestDirEmptyEtc(t *testing.T) {
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(false)),
+					},
+				},
+			},
+		},
+	})
+}
+
+func TestDirEmptyRandomEmptyDir(t *testing.T) {
+	path := t.TempDir()
+	resource.UnitTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.SkipBelow(tfversion.Version1_8_0),
+		},
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() {
+					err := os.MkdirAll(path, 0755)
+					if err != nil {
+						t.Fatalf("failed to create directory: %s", err)
+					}
+				},
+				Config: `
+                output "test" {
+                    value = provider::foxfunx::direxists("` + path + `")
+                }
+                `,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(true)),
 					},
 				},
 			},
