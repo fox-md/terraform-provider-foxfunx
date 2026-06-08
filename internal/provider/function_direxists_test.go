@@ -69,7 +69,11 @@ func TestDirExistsDummyDir(t *testing.T) {
                     value = provider::foxfunx::direxists("~/dummy_dir")
                 }
                 `,
-				ExpectError: regexp.MustCompile(`path does not exist`),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(false)),
+					},
+				},
 			},
 		},
 	})
@@ -88,7 +92,11 @@ func TestDirExistsEmptyValue(t *testing.T) {
                     value = provider::foxfunx::direxists("")
                 }
                 `,
-				ExpectError: regexp.MustCompile(`path does not exist`),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(false)),
+					},
+				},
 			},
 		},
 	})
@@ -108,8 +116,11 @@ func TestDirExistsRandomUuid(t *testing.T) {
                     value = provider::foxfunx::direxists("~/` + id.String() + `")
                 }
                 `,
-				ExpectError: regexp.MustCompile(`path does
-not exist`),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(false)),
+					},
+				},
 			},
 		},
 	})
