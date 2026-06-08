@@ -46,9 +46,10 @@ func (p *foxfunxProvider) Metadata(_ context.Context, _ provider.MetadataRequest
 func (p *foxfunxProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "`foxfunx` is a function-only provider.\n\n" +
-			"`foxfunx` includes below functions:" +
-			"- `direxists` given a path, return boolean depending on directory existence. Fails for files." +
-			"- `tocidr` given subnet and netmask, return subnet and netmask in the cidr format. Fails for invalid subnet or netmasks.",
+			"`foxfunx` includes below functions:\n" +
+			"- `direxists` given a path, return boolean depending on directory existence. Fails for files.\n" +
+			"- `dirempty` given a path, return boolean depending on directory content. Fails for files.\n" +
+			"- `tocidr` given subnet and netmask, return subnet and netmask in the cidr format. Fails for invalid subnet or netmasks.\n",
 	}
 }
 
@@ -71,5 +72,6 @@ func (p *foxfunxProvider) Functions(_ context.Context) []func() function.Functio
 	return []func() function.Function{
 		NewDirExistsFunction,
 		NewToCidrFunction,
+		NewDirEmptyFunction,
 	}
 }

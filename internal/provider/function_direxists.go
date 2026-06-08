@@ -5,11 +5,8 @@ package provider
 
 import (
 	"context"
-	"fmt"
-	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/function"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 // Ensure the implementation satisfies the desired interfaces.
@@ -41,22 +38,13 @@ func (f *DirExistsFunction) Definition(ctx context.Context, req function.Definit
 
 func (f *DirExistsFunction) Run(ctx context.Context, req function.RunRequest, resp *function.RunResponse) {
 	var path string
-	var response bool
 
 	// Read Terraform argument data into the variables
 	resp.Error = function.ConcatFuncErrors(resp.Error, req.Arguments.Get(ctx, &path))
 
-	info, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		response = false
-	} else if err != nil {
-		tflog.Error(ctx, fmt.Sprintf("failed to verify path. Error: %s", err.Error()))
-		resp.Error = function.NewArgumentFuncError(0, fmt.Sprintf("Failed to check '%s' path. Error: %s", path, err.Error()))
-		return
-	} else if info.IsDir() {
-		response = true
-	} else {
-		resp.Error = function.NewArgumentFuncError(0, fmt.Sprintf("'%s' is a file, not a directory", path))
+	response, err := isDir(ctx, path)
+	if err != nil {
+		resp.Error = function.NewArgumentFuncError(0, err.Error())
 		return
 	}
 
