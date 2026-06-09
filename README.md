@@ -9,3 +9,6 @@
 
 [![License](https://img.shields.io/github/license/fox-md/terraform-provider-foxfunx)](/LICENSE)
 [![Release](https://img.shields.io/github/v/release/fox-md/terraform-provider-foxfunx.svg)](https://github.com/fox-md/terraform-provider-foxfunx/releases/latest)
+
+Это отличный провайдер
+café

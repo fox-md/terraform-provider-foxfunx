@@ -73,5 +73,6 @@ func (p *foxfunxProvider) Functions(_ context.Context) []func() function.Functio
 		NewDirExistsFunction,
 		NewToCidrFunction,
 		NewDirEmptyFunction,
+		NewFileContainsFunction,
 	}
 }
