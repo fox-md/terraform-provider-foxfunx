@@ -15,7 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-// Ensure the implementation satisfies the desired interfaces.
 var _ function.Function = &FileContainsFunction{}
 
 type FileContainsFunction struct{}
@@ -30,7 +29,7 @@ func (f *FileContainsFunction) Metadata(ctx context.Context, req function.Metada
 
 func (f *FileContainsFunction) Definition(ctx context.Context, req function.DefinitionRequest, resp *function.DefinitionResponse) {
 	resp.Definition = function.Definition{
-		Summary:     "`filecontains` determines whether string exists in the file content.",
+		Summary:     "`filecontains` determines whether search string exists in the file content.",
 		Description: "Given a path, return boolean depending on whether the file content matches the search string.",
 		Parameters: []function.Parameter{
 			function.StringParameter{
@@ -56,7 +55,6 @@ func (f *FileContainsFunction) Run(ctx context.Context, req function.RunRequest,
 	var file_path string
 	var search_text string
 
-	// Read Terraform argument data into the variables
 	resp.Error = function.ConcatFuncErrors(resp.Error, req.Arguments.Get(ctx, &file_path, &search_text))
 
 	response, err := fileContains(file_path, search_text)
@@ -66,7 +64,6 @@ func (f *FileContainsFunction) Run(ctx context.Context, req function.RunRequest,
 		return
 	}
 
-	// Set the result
 	resp.Error = function.ConcatFuncErrors(resp.Error, resp.Result.Set(ctx, response))
 }
 
@@ -77,7 +74,6 @@ func fileContains(filePath, target string) (bool, error) {
 	}
 	defer file.Close()
 
-	// Read the file line by line
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), target) {
