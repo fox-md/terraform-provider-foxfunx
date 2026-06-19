@@ -15,7 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/tfversion"
 )
 
-func TestDirFileContainsCaseSensitive(t *testing.T) {
+func TestFileContainsCaseSensitive(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	fileText := "HELLO world\n"
@@ -48,7 +48,7 @@ func TestDirFileContainsCaseSensitive(t *testing.T) {
 	})
 }
 
-func TestDirFileContainsCaseInsensitive(t *testing.T) {
+func TestFileContainsCaseInsensitive(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	fileText := "HELLO world\nWoRld HellO"
@@ -81,7 +81,7 @@ func TestDirFileContainsCaseInsensitive(t *testing.T) {
 	})
 }
 
-func TestDirFileContainsEnTrue(t *testing.T) {
+func TestFileContainsEnTrue(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	searchText := "hello world"
@@ -113,7 +113,7 @@ func TestDirFileContainsEnTrue(t *testing.T) {
 	})
 }
 
-func TestDirFileContainsEnFalse(t *testing.T) {
+func TestFileContainsEnFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	searchText := "hello world"
@@ -145,7 +145,7 @@ func TestDirFileContainsEnFalse(t *testing.T) {
 	})
 }
 
-func TestDirFileContainsRuTrue(t *testing.T) {
+func TestFileContainsRuTrue(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	searchText := "привет"
@@ -177,7 +177,7 @@ func TestDirFileContainsRuTrue(t *testing.T) {
 	})
 }
 
-func TestDirFileContainsRuFalse(t *testing.T) {
+func TestFileContainsRuFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	searchText := "привет"
@@ -209,7 +209,7 @@ func TestDirFileContainsRuFalse(t *testing.T) {
 	})
 }
 
-func TestDirFileContainsFrTrue(t *testing.T) {
+func TestFileContainsFrTrue(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	searchText := "café"
@@ -241,7 +241,7 @@ func TestDirFileContainsFrTrue(t *testing.T) {
 	})
 }
 
-func TestDirFileContainsFrFalse(t *testing.T) {
+func TestFileContainsFrFalse(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	searchText := "café"
@@ -273,7 +273,7 @@ func TestDirFileContainsFrFalse(t *testing.T) {
 	})
 }
 
-func TestDirFileFailEmptySearchText(t *testing.T) {
+func TestFileContainsFailEmptySearchText(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
 	searchText := "hello world"
@@ -302,7 +302,7 @@ string length must be at least 1`),
 	})
 }
 
-func TestDirFileFailEmptyFilePath(t *testing.T) {
+func TestFileContainsFailEmptyFilePath(t *testing.T) {
 	searchText := "hello world"
 	resource.UnitTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
