@@ -49,6 +49,7 @@ func (p *foxfunxProvider) Schema(_ context.Context, _ provider.SchemaRequest, re
 			"`foxfunx` includes below functions:\n" +
 			"- `direxists` given a path, return boolean depending on directory existence. Fails for files.\n" +
 			"- `dirempty` given a path, return boolean depending on directory content. Fails for files.\n" +
+			"- `filecontains` given a path, return boolean depending on whether the file content matches the search string.\n" +
 			"- `tocidr` given subnet and netmask, return subnet and netmask in the cidr format. Fails for invalid subnet or netmasks.\n",
 	}
 }
@@ -73,5 +74,6 @@ func (p *foxfunxProvider) Functions(_ context.Context) []func() function.Functio
 		NewDirExistsFunction,
 		NewToCidrFunction,
 		NewDirEmptyFunction,
+		NewFileContainsFunction,
 	}
 }
