@@ -12,6 +12,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/function"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -47,6 +48,10 @@ func (f *FileContainsFunction) Definition(ctx context.Context, req function.Defi
 				},
 			},
 		},
+		VariadicParameter: function.BoolParameter{
+			Name:        "match_case",
+			Description: "Match search text case. Default to `true`. No need to pass, unless you want to set it to `false`.",
+		},
 		Return: function.BoolReturn{},
 	}
 }
@@ -54,10 +59,19 @@ func (f *FileContainsFunction) Definition(ctx context.Context, req function.Defi
 func (f *FileContainsFunction) Run(ctx context.Context, req function.RunRequest, resp *function.RunResponse) {
 	var file_path string
 	var search_text string
+	var match_case_ref []types.Bool
 
-	resp.Error = function.ConcatFuncErrors(resp.Error, req.Arguments.Get(ctx, &file_path, &search_text))
+	resp.Error = function.ConcatFuncErrors(resp.Error, req.Arguments.Get(ctx, &file_path, &search_text, &match_case_ref))
 
-	response, err := fileContains(file_path, search_text)
+	match_case := true
+
+	if len(match_case_ref) > 0 {
+		if !match_case_ref[0].IsNull() && !match_case_ref[0].IsUnknown() {
+			match_case = match_case_ref[0].ValueBool()
+		}
+	}
+
+	response, err := fileContains(file_path, search_text, match_case)
 	if err != nil {
 		tflog.Error(ctx, fmt.Sprintf("failed to search for text in the '%s' file. Error: %s", file_path, err.Error()))
 		resp.Error = function.NewArgumentFuncError(0, fmt.Sprintf("Failed to search for text in the '%s' path. Error: %s", file_path, err.Error()))
@@ -67,7 +81,7 @@ func (f *FileContainsFunction) Run(ctx context.Context, req function.RunRequest,
 	resp.Error = function.ConcatFuncErrors(resp.Error, resp.Result.Set(ctx, response))
 }
 
-func fileContains(filePath, target string) (bool, error) {
+func fileContains(filePath, target string, match_case bool) (bool, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return false, err
@@ -75,9 +89,18 @@ func fileContains(filePath, target string) (bool, error) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		if strings.Contains(scanner.Text(), target) {
-			return true, nil
+	switch match_case {
+	case true:
+		for scanner.Scan() {
+			if strings.Contains(scanner.Text(), target) {
+				return true, nil
+			}
+		}
+	case false:
+		for scanner.Scan() {
+			if strings.EqualFold(scanner.Text(), target) {
+				return true, nil
+			}
 		}
 	}
 

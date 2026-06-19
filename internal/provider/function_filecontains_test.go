@@ -15,6 +15,72 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/tfversion"
 )
 
+func TestDirFileContainsCaseSensitive(t *testing.T) {
+	tmpDir := t.TempDir()
+	filePath := filepath.Join(tmpDir, "test.txt")
+	fileText := "HELLO world\n"
+	searchText := "hello WORLD"
+	resource.UnitTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.SkipBelow(tfversion.Version1_8_0),
+		},
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() {
+					err := os.WriteFile(filePath, []byte(fileText), 0644)
+					if err != nil {
+						t.Fatal(err)
+					}
+				},
+				Config: `
+                output "test" {
+                    value = provider::foxfunx::filecontains("` + filePath + `","` + searchText + `")
+                }
+                `,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(false)),
+					},
+				},
+			},
+		},
+	})
+}
+
+func TestDirFileContainsCaseInsensitive(t *testing.T) {
+	tmpDir := t.TempDir()
+	filePath := filepath.Join(tmpDir, "test.txt")
+	fileText := "HELLO world\nWoRld HellO"
+	searchText := "hello WORLD"
+	resource.UnitTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.SkipBelow(tfversion.Version1_8_0),
+		},
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() {
+					err := os.WriteFile(filePath, []byte(fileText), 0644)
+					if err != nil {
+						t.Fatal(err)
+					}
+				},
+				Config: `
+                output "test" {
+                    value = provider::foxfunx::filecontains("` + filePath + `","` + searchText + `", false)
+                }
+                `,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectKnownOutputValue("test", knownvalue.Bool(true)),
+					},
+				},
+			},
+		},
+	})
+}
+
 func TestDirFileContainsEnTrue(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.txt")
@@ -187,7 +253,7 @@ func TestDirFileContainsFrFalse(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() {
-					err := os.WriteFile(filePath, []byte("gâteau"), 0644)
+					err := os.WriteFile(filePath, []byte("cafe"), 0644)
 					if err != nil {
 						t.Fatal(err)
 					}
